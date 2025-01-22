@@ -1,19 +1,36 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { login } from '../../redux/authSlice';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Login = () => {
-  const [formData, setFormData] = useState({ username: '', password: '' });
+  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [error, setError] = useState(null);
   const dispatch = useDispatch();
-  const { isAuthenticated, error } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    dispatch(login(formData));
+
+    try {
+      // Dispatch the login thunk and wait for the response
+      const result = await dispatch(login(formData)).unwrap();
+
+
+      // Store the token in localStorage
+      localStorage.setItem('access_token', result.data.access);
+      localStorage.setItem('refresh_token', result.data.refresh);
+
+      // Redirect to the home page
+      navigate('/');
+    } catch (err) {
+      // Handle errors explicitly
+      setError(err.error || 'Something went wrong');
+    }
   };
 
   return (
@@ -22,9 +39,9 @@ const Login = () => {
       <form onSubmit={handleLogin}>
         <input
           type="text"
-          name="username"
-          placeholder="Username"
-          value={formData.username}
+          name="email"
+          placeholder="Email"
+          value={formData.email}
           onChange={handleChange}
         />
         <input
@@ -36,8 +53,12 @@ const Login = () => {
         />
         <button type="submit">Login</button>
       </form>
-      {isAuthenticated && <p>Logged in successfully!</p>}
-      {error && <p style={{ color: 'red' }}>{error.error}</p>}
+
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+
+      <p>
+        Don't have an account? <Link to="/register">Register here</Link>
+      </p>
     </div>
   );
 };

@@ -6,6 +6,7 @@ import Register from './pages/register/Register';
 import PrivateRoute from './components/PrivetRoute/PrivateRoute'; // Import PrivateRoute
 
 const App = () => (
+  
   <Routes>
     <Route
       path="/"

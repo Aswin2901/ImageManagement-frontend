@@ -1,11 +1,12 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 
 const PrivateRoute = ({ children }) => {
-  const { isAuthenticated } = useSelector((state) => state.auth);
+  // Check if the access token exists in localStorage
+  const accessToken = localStorage.getItem('access_token');
 
-  return isAuthenticated ? children : <Navigate to="/login" />;
+  // Redirect to the login page if the token is missing
+  return accessToken ? children : <Navigate to="/login" />;
 };
 
 export default PrivateRoute;
