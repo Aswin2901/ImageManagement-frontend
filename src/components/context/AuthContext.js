@@ -15,7 +15,9 @@ export const AuthProvider = ({ children }) => {
 
   const login = (data) => {
     const userData = {
-      id: data.id,
+      id: data.user.id,
+      email: data.user.email,
+      full_name : data.user.full_name,
     };
     setAuth({
       accessToken: data.access,
@@ -25,7 +27,7 @@ export const AuthProvider = ({ children }) => {
     });
     localStorage.setItem('access_token', data.access);
     localStorage.setItem('refresh_token', data.refresh);
-    localStorage.setItem('user', JSON.stringify(userData));
+    localStorage.setItem('user_id', userData.id);
   };
 
   const logout = () => {
