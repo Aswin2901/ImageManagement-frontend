@@ -1,0 +1,94 @@
+.image-management-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    text-align: center;
+  }
+  .heading{
+    margin-top: 20px;
+    margin-bottom: 15px;
+    padding-bottom: 5px;
+  }
+
+ 
+  
+  .toggle-upload-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+  
+  .toggle-upload-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .upload-section {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #f9f9f9;
+  }
+  
+  .preview-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+  }
+  
+  .preview-card {
+    text-align: center;
+    margin-top: 10px;
+  }
+  
+  .preview-card img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+  }
+  
+  .image-grid-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  
+  .image-card {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .image-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+  }
+  
+  .image-actions {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+  }
+  
+  .save-order-button {
+    padding: 10px 20px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .save-order-button:hover {
+    background: #0056b3;
+  }
+  
