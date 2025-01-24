@@ -1,114 +1,191 @@
-.image-management-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-    font-family: Arial, sans-serif;
-    text-align: center;
-  }
-  .heading{
-    margin-top: 20px;
-    margin-bottom: 15px;
-    padding-bottom: 5px;
-  }
+/* Fixed navbar styling */
+.full-head {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: white;
+  border-bottom: 1px solid #ddd;
+}
 
-  .message-container {
-    margin: 1rem 0;
-  }
-  
-  .success-message {
-    color: #28a745;
-    background-color: #d4edda;
-    padding: 0.5rem;
-    border: 1px solid #c3e6cb;
-    border-radius: 4px;
-  }
-  
-  .error-message {
-    color: #dc3545;
-    background-color: #f8d7da;
-    padding: 0.5rem;
-    border: 1px solid #f5c6cb;
-    border-radius: 4px;
-  }
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+}
 
- 
-  
-  .toggle-upload-button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-bottom: 20px;
-  }
-  
-  .toggle-upload-button:hover {
-    background-color: #0056b3;
-  }
-  
-  .upload-section {
-    margin-bottom: 20px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    background: #f9f9f9;
-  }
-  
-  .preview-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-  }
-  
-  .preview-card {
-    text-align: center;
-    margin-top: 10px;
-  }
-  
-  .preview-card img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-  }
-  
-  .image-grid-container {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-  }
-  
-  .image-card {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    text-align: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .image-card img {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-  }
-  
-  .image-actions {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 10px;
-  }
-  
-  .save-order-button {
-    padding: 10px 20px;
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .save-order-button:hover {
-    background: #0056b3;
-  }
-  
+.heading {
+  margin: 0;
+  font-size: 24px;
+}
+
+.toggle-upload-button,
+.profile-button {
+  width: 60px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #05bf0c;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: background-color 0.3s ease;
+}
+
+.toggle-upload-button:hover,
+.profile-button:hover {
+  background-color: #45a049;
+}
+
+/* Upload section */
+.upload-section {
+  margin-top: 80px; /* Push down below the navbar */
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 600px;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.upload-input-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.upload-input-container input {
+  flex: 1;
+  padding: 8px;
+  margin-right: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.upload-btn {
+  padding: 8px 16px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.upload-btn:hover {
+  background-color: #45a049;
+}
+.image-grid-container {
+  margin-top: 100px; /* Add space below navbar */
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Limit to 4 columns */
+  gap: 20px;
+  padding: 20px;
+}
+
+/* Image card */
+.image-card {
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 5px; /* Reduce white space inside card */
+}
+
+/* Adjust image size */
+.image-card img {
+  width: 100%;
+  height: 200px; /* Increase image height */
+  object-fit: cover; /* Ensure proper cropping */
+}
+
+/* Button container inside card */
+.image-card .button-container {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px; /* Add space between image and buttons */
+}
+
+.preview-card {
+  background-color: #fff;
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.preview-image {
+  max-width: 100%;
+  max-height: 150px;
+  object-fit: contain;
+}
+
+.upload-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.upload-popup {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  max-width: 90%;
+  position: relative;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.close-popup-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: red;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.upload-input-container {
+  margin-top: 15px;
+}
+
+.preview-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.preview-card {
+  width: 100px;
+  text-align: center;
+}
+
+.preview-image {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.remove-image-btn {
+  margin-top: 5px;
+  background: red;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}

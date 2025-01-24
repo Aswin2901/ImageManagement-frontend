@@ -3,6 +3,8 @@ import { useDrop, useDrag, DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import api from "../../components/services/api";
 import "./Home.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLadderWater, faUpload, faUser ,faTimes } from '@fortawesome/free-solid-svg-icons';
 
 const DraggableImage = ({ image, index, moveImage, handleUpdate, handleDelete }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -37,45 +39,54 @@ const DraggableImage = ({ image, index, moveImage, handleUpdate, handleDelete })
 
   return (
     <div className="image-card" ref={(node) => ref(drop(node))}>
-      {!isEditing ? (
-        <>
-          <img src={`http://127.0.0.1:8000/${image.image}`} alt={image.title} />
-          <p>{image.title}</p>
-          <div className="image-actions">
-            <button onClick={() => setIsEditing(true)}>Edit</button>
-            <button onClick={() => handleDelete(index)}>Delete</button>
-          </div>
-        </>
-      ) : (
-        <div className="edit-section">
-          <div className="edit-image">
-            <img
-              src={editedImage ? URL.createObjectURL(editedImage) : `http://127.0.0.1:8000/${image.image}`}
-              alt="Preview"
-            />
-            <input type="file" onChange={handleImageChange} />
-          </div>
-          <input
-            type="text"
-            value={editedTitle}
-            onChange={(e) => setEditedTitle(e.target.value)}
-            placeholder="Enter title"
-          />
-          <button onClick={saveChanges}>Save</button>
-          <button onClick={() => setIsEditing(false)}>Cancel</button>
-        </div>
-      )}
+  {!isEditing ? (
+    <>
+      <img
+        src={`http://127.0.0.1:8000/${image.image}`}
+        alt={image.title}
+      />
+      <p>{image.title}</p>
+      <div className="image-actions">
+        <button onClick={() => setIsEditing(true)}>Edit</button>
+        <button onClick={() => handleDelete(index)}>Delete</button>
+      </div>
+    </>
+  ) : (
+    <div className="edit-section">
+      <div className="edit-image">
+        <img
+          src={
+            editedImage
+              ? URL.createObjectURL(editedImage)
+              : `http://127.0.0.1:8000/${image.image}`
+          }
+          alt="Preview"
+        />
+        <input type="file" onChange={handleImageChange} />
+      </div>
+      <input
+        type="text"
+        value={editedTitle}
+        onChange={(e) => setEditedTitle(e.target.value)}
+        placeholder="Enter title"
+      />
+      <div className="edit-actions">
+        <button onClick={saveChanges}>Save</button>
+        <button onClick={() => setIsEditing(false)}>Cancel</button>
+      </div>
     </div>
+  )}
+</div>
   );
 };
 const Home = () => {
   const [images, setImages] = useState([]);
   const [files, setFiles] = useState([]);
-  const [showUploadSection, setShowUploadSection] = useState(false);
   const [isOrderChanged, setIsOrderChanged] = useState(false);
   const user_id = JSON.parse(localStorage.getItem("user_id"));
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [isUploadPopupOpen, setIsUploadPopupOpen] = useState(false);
 
   useEffect(() => {
     fetchImages();
@@ -153,8 +164,27 @@ const Home = () => {
     const updatedImages = [...images];
     const [movedImage] = updatedImages.splice(fromIndex, 1);
     updatedImages.splice(toIndex, 0, movedImage);
+  
     setImages(updatedImages);
-    setIsOrderChanged(true); // Show save button
+  
+    // Prepare the order data for the backend
+    const orderData = updatedImages.map((image, index) => ({
+      id: image.id,
+      order: index,
+    }));
+  
+    // Send updated order to the backend
+    api
+      .post("accounts/update_order/", {
+        user_id: user_id, // Pass the user ID
+        images: orderData,
+      })
+      .then(() => {
+        console.log("Order updated successfully");
+      })
+      .catch((error) => {
+        console.error("Failed to update order:", error.response?.data || error.message);
+      });
   };
 
   const handleUpload = async () => {
@@ -170,6 +200,7 @@ const Home = () => {
       });
       fetchImages();
       setFiles([]);
+      setIsUploadPopupOpen(false)
     } catch (error) {
       console.error("Upload failed:", error.response?.data || error.message);
     }
@@ -187,69 +218,107 @@ const Home = () => {
     }
   };
 
-  return (
-    <DndProvider backend={HTML5Backend}>
-      <div className="image-management-container">
-        <h1 className="heading">Image Management</h1>
+  const removeImage = (index) => {
+    const updatedFiles = files.filter((_, i) => i !== index);
+    setFiles(updatedFiles);
+  };
 
-        <div className="message-container">
-          {successMessage && <div className="success-message">{successMessage}</div>}
-          {errorMessage && <div className="error-message">{errorMessage}</div>}
+  return (
+      <div>
+        <div className="full-head">
+          <div className="header-container">
+            {/* Upload Button with Icon */}
+            <button
+              className="toggle-upload-button"
+              onClick={() => setIsUploadPopupOpen(true)}
+            >
+              <FontAwesomeIcon icon={faUpload} />
+            </button>
+
+            <h1 className="heading">Image Management</h1>
+
+            {/* Profile Button */}
+            <button className="profile-button">
+              <FontAwesomeIcon icon={faUser} />
+            </button>
+          </div>
         </div>
 
-        {/* Toggleable Upload Section */}
-        <button
-          className="toggle-upload-button"
-          onClick={() => setShowUploadSection(!showUploadSection)}
-        >
-          {showUploadSection ? " Close" : "Upload Images"}
+        {/* Upload Section */}
+        {isUploadPopupOpen && (
+  <div className="upload-popup-overlay">
+    <div className="upload-popup">
+    <button
+        className="close-popup-button"
+        onClick={() => setIsUploadPopupOpen(false)}
+      >
+        <FontAwesomeIcon icon={faTimes} /> {/* Close icon */}
+      </button>
+      <h2>Upload Images</h2>
+      <div className="upload-input-container">
+        <input type="file" multiple onChange={handleFileChange} />
+        <button className="upload-btn" onClick={handleUpload}>
+          Upload
         </button>
-
-        {showUploadSection && (
-          <div className="upload-section">
-            <input type="file" multiple onChange={handleFileChange} />
-            <button onClick={handleUpload}>Upload</button>
-            <div className="preview-container">
-              {files.map((file, index) => (
-                <div key={index} className="preview-card">
-                  <img src={file.imagePreview} alt="Preview" />
-                  <input
-                    type="text"
-                    placeholder="Enter title"
-                    value={file.title}
-                    onChange={(e) => {
-                      const updatedFiles = [...files];
-                      updatedFiles[index].title = e.target.value;
-                      setFiles(updatedFiles);
-                    }}
-                  />
-                </div>
-              ))}
+      </div>
+      <div className="preview-container">
+        {files.map((file, index) => (
+          <div key={index} className="preview-card">
+            <img src={file.imagePreview} alt="Preview" className="preview-image" />
+            <div className="image-info">
+              <input
+                type="text"
+                placeholder="Enter title"
+                value={file.title}
+                onChange={(e) => {
+                  const updatedFiles = [...files];
+                  updatedFiles[index].title = e.target.value;
+                  setFiles(updatedFiles);
+                }}
+              />
+              <button
+                className="remove-image-btn"
+                onClick={() => removeImage(index)}
+              >
+                Remove
+              </button>
             </div>
           </div>
-        )}
-
-        {/* Uploaded Images Section */}
-        <div className="image-grid-container">
-          {images.map((image, index) => (
-            <DraggableImage
-              key={image.id || index}
-              image={image}
-              index={index}
-              moveImage={moveImage}
-              handleUpdate={handleUpdate}
-              handleDelete={handleDelete}
-            />
-          ))}
-        </div>
-
-        {isOrderChanged && (
-          <button onClick={saveOrder} className="save-order-button">
-            Save Order
-          </button>
-        )}
+        ))}
       </div>
-    </DndProvider>
+    </div>
+  </div>
+)}
+
+        <DndProvider backend={HTML5Backend}>
+          <div className="image-management-container">
+            <div className="message-container">
+              {successMessage && <div className="success-message">{successMessage}</div>}
+              {errorMessage && <div className="error-message">{errorMessage}</div>}
+            </div>
+
+            {/* Uploaded Images Section */}
+            <div className="image-grid-container">
+              {images.map((image, index) => (
+                <DraggableImage
+                  key={image.id || index}
+                  image={image}
+                  index={index}
+                  moveImage={moveImage}
+                  handleUpdate={handleUpdate}
+                  handleDelete={handleDelete}
+                />
+              ))}
+            </div>
+
+            {isOrderChanged && (
+              <button onClick={saveOrder} className="save-order-button">
+                Save Order
+              </button>
+            )}
+          </div>
+        </DndProvider>
+      </div>
   );
 };
 
