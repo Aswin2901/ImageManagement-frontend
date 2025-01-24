@@ -16,10 +16,11 @@ const Register = () => {
         }
         try {
             const response = await api.post('accounts/register/', formData);
-            alert(`Registration successful. Your token is: ${response.data.token}`);
+            alert(`Registration successful.`);
             navigate('/login')
 
         } catch (error) {
+            console.log(error)
             setError(error.response?.data || 'An error occurred during registration.');
         }
     };
