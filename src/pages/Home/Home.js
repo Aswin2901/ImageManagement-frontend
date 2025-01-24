@@ -4,7 +4,11 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import api from "../../components/services/api";
 import "./Home.css";
 
-const DraggableImage = ({ image, index, moveImage, handleEdit, handleDelete }) => {
+const DraggableImage = ({ image, index, moveImage, handleUpdate, handleDelete }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedTitle, setEditedTitle] = useState(image.title);
+  const [editedImage, setEditedImage] = useState(null);
+
   const [, ref] = useDrag({
     type: "image",
     item: { index },
@@ -20,29 +24,58 @@ const DraggableImage = ({ image, index, moveImage, handleEdit, handleDelete }) =
     },
   });
 
+  const handleImageChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setEditedImage(e.target.files[0]);
+    }
+  };
+
+  const saveChanges = () => {
+    handleUpdate(index, editedTitle, editedImage);
+    setIsEditing(false);
+  };
+
   return (
     <div className="image-card" ref={(node) => ref(drop(node))}>
-      <img src={image.imagePreview || `http://127.0.0.1:8000/${image.image}`} alt={image.title} />
-      <input
-        type="text"
-        value={image.title}
-        onChange={(e) => handleEdit(index, "title", e.target.value)}
-        placeholder="Enter title"
-      />
-      <div className="image-actions">
-        <button onClick={() => handleEdit(index)}>Edit</button>
-        <button onClick={() => handleDelete(index)}>Delete</button>
-      </div>
+      {!isEditing ? (
+        <>
+          <img src={`http://127.0.0.1:8000/${image.image}`} alt={image.title} />
+          <p>{image.title}</p>
+          <div className="image-actions">
+            <button onClick={() => setIsEditing(true)}>Edit</button>
+            <button onClick={() => handleDelete(index)}>Delete</button>
+          </div>
+        </>
+      ) : (
+        <div className="edit-section">
+          <div className="edit-image">
+            <img
+              src={editedImage ? URL.createObjectURL(editedImage) : `http://127.0.0.1:8000/${image.image}`}
+              alt="Preview"
+            />
+            <input type="file" onChange={handleImageChange} />
+          </div>
+          <input
+            type="text"
+            value={editedTitle}
+            onChange={(e) => setEditedTitle(e.target.value)}
+            placeholder="Enter title"
+          />
+          <button onClick={saveChanges}>Save</button>
+          <button onClick={() => setIsEditing(false)}>Cancel</button>
+        </div>
+      )}
     </div>
   );
 };
-
 const Home = () => {
   const [images, setImages] = useState([]);
   const [files, setFiles] = useState([]);
   const [showUploadSection, setShowUploadSection] = useState(false);
   const [isOrderChanged, setIsOrderChanged] = useState(false);
   const user_id = JSON.parse(localStorage.getItem("user_id"));
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     fetchImages();
@@ -66,16 +99,54 @@ const Home = () => {
     setFiles([...files, ...selectedFiles]);
   };
 
-  const handleEdit = (index, field, value) => {
+  const handleUpdate = async (index, updatedTitle, updatedImage) => {
     const updatedImages = [...images];
-    updatedImages[index][field] = value;
-    setImages(updatedImages);
+    updatedImages[index].title = updatedTitle;
+  
+    const formData = new FormData();
+    formData.append("title", updatedTitle);
+    if (updatedImage) {
+      formData.append("image", updatedImage);
+    }
+  
+    try {
+      const imageId = updatedImages[index].id;
+      const response = await api.patch(`accounts/images_edit/${imageId}/`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      updatedImages[index] = response.data; // Update with server response
+      fetchImages();
+      alert("Image updated successfully.");
+    } catch (error) {
+      console.error("Error updating image:", error.response?.data || error.message);
+      alert("Failed to update image. Please try again.");
+    }
   };
+  
 
-  const handleDelete = (index) => {
+  const handleDelete = async (index) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this image?");
+    if (!confirmDelete) {
+      return; // If the user cancels, exit the function
+    }
+  
+    const imageId = images[index].id;
+  
+    // Optimistic update
     const updatedImages = [...images];
     updatedImages.splice(index, 1);
     setImages(updatedImages);
+  
+    try {
+      await api.delete(`accounts/images_delete/${imageId}/`);
+      setSuccessMessage("Image deleted successfully."); 
+      fetchImages();
+      setSuccessMessage(""); 
+    } catch (error) {
+      console.error("Error deleting image:", error.response?.data || error.message);
+      setErrorMessage("Failed to delete image. Please try again."); // Display error message
+      fetchImages(); // Refresh the image list in case of failure
+    }
   };
 
   const moveImage = (fromIndex, toIndex) => {
@@ -121,6 +192,11 @@ const Home = () => {
       <div className="image-management-container">
         <h1 className="heading">Image Management</h1>
 
+        <div className="message-container">
+          {successMessage && <div className="success-message">{successMessage}</div>}
+          {errorMessage && <div className="error-message">{errorMessage}</div>}
+        </div>
+
         {/* Toggleable Upload Section */}
         <button
           className="toggle-upload-button"
@@ -161,7 +237,7 @@ const Home = () => {
               image={image}
               index={index}
               moveImage={moveImage}
-              handleEdit={handleEdit}
+              handleUpdate={handleUpdate}
               handleDelete={handleDelete}
             />
           ))}
