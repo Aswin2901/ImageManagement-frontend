@@ -29,52 +29,56 @@ const Register = () => {
     };
 
     return (
-        <div className="container">
-            <h1>Register</h1>
-            <form onSubmit={handleSubmit}>
-                <input
-                type="text"
-                name="full_name"
-                placeholder="Full Name"
-                value={formData.full_name}
-                onChange={handleChange}
-                />
-                <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                value={formData.email}
-                onChange={handleChange}
-                />
-                <input
-                type="text"
-                name="phone_number"
-                placeholder="Phone Number"
-                value={formData.phone_number}
-                onChange={handleChange}
-                />
-                <input
-                type="password"
-                name="password"
-                placeholder="Password"
-                value={formData.password}
-                onChange={handleChange}
-                />
-                <input
-                type="password"
-                name="confirm_password"
-                placeholder="Confirm Password"
-                value={formData.confirm_password}
-                onChange={handleChange}
-                />
-                <button type="submit">Register</button>
+        <body className='page-styling'>
 
-            </form>
-            {error && <p style={{ color: 'red' }}>{JSON.stringify(error)}</p>}
-                <p>
-                Already have an account? <Link to="/login">Login Here</Link>
-                </p>
-            </div>
+        
+            <div className="container">
+                <h1>Register</h1>
+                <form onSubmit={handleSubmit}>
+                    <input
+                    type="text"
+                    name="full_name"
+                    placeholder="Full Name"
+                    value={formData.full_name}
+                    onChange={handleChange}
+                    />
+                    <input
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    />
+                    <input
+                    type="text"
+                    name="phone_number"
+                    placeholder="Phone Number"
+                    value={formData.phone_number}
+                    onChange={handleChange}
+                    />
+                    <input
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    />
+                    <input
+                    type="password"
+                    name="confirm_password"
+                    placeholder="Confirm Password"
+                    value={formData.confirm_password}
+                    onChange={handleChange}
+                    />
+                    <button type="submit">Register</button>
+
+                </form>
+                {error && <p style={{ color: 'red' }}>{JSON.stringify(error)}</p>}
+                    <p>
+                    Already have an account? <Link to="/login">Login Here</Link>
+                    </p>
+                </div>
+            </body>
     );
 };
 

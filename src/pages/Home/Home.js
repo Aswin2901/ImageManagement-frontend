@@ -5,6 +5,7 @@ import api from "../../components/services/api";
 import "./Home.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLadderWater, faUpload, faUser ,faTimes } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from "react-router-dom";
 
 const DraggableImage = ({ image, index, moveImage, handleUpdate, handleDelete }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -88,6 +89,7 @@ const Home = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isUploadPopupOpen, setIsUploadPopupOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate()
 
 
   useEffect(() => {
@@ -260,7 +262,9 @@ const Home = () => {
               <h1 className="heading">Image Management</h1>
 
               {/* Profile Button */}
-              <button className="profile-button">
+              <button className="profile-button"
+              onClick={() => navigate('/profile')}
+              >
                 <FontAwesomeIcon icon={faUser} />
               </button>
             </div>
@@ -322,23 +326,22 @@ const Home = () => {
 
             {/* Uploaded Images Section */}
             <div className="image-grid-container">
-              {images.map((image, index) => (
-                <DraggableImage
-                  key={image.id || index}
-                  image={image}
-                  index={index}
-                  moveImage={moveImage}
-                  handleUpdate={handleUpdate}
-                  handleDelete={handleDelete}
-                />
-              ))}
+              {images.length === 0 ? (
+                <h4>Please upload your images</h4>
+              ) : (
+                images.map((image, index) => (
+                  <DraggableImage
+                    key={image.id || index}
+                    image={image}
+                    index={index}
+                    moveImage={moveImage}
+                    handleUpdate={handleUpdate}
+                    handleDelete={handleDelete}
+                  />
+                ))
+              )}
             </div>
 
-            {isOrderChanged && (
-              <button onClick={saveOrder} className="save-order-button">
-                Save Order
-              </button>
-            )}
           </div>
         </DndProvider>
       </div>

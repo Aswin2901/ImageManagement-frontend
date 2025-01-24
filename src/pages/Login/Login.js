@@ -23,8 +23,6 @@ const Login = () => {
     try {
       const response = await api.post('accounts/login/', formData);
 
-      console.log('loged in :' , response)
-  
       login(response.data)
   
       console.log('Login successful! Redirecting...');
@@ -33,36 +31,39 @@ const Login = () => {
       }, 2000);
     } catch (error) {
       console.error('Login error:', error.response ? error.response.data : error.message);
-      console.log('Invalid credentials. Please try again.');
+      setError('Invalid credentials. Please try again.');
     }
   };
   
 
   return (
-    <div className="container">
-  <h1>Login Page</h1>
-  <form onSubmit={handleLogin}>
-    <input
-      type="text"
-      name="email"
-      placeholder="Email"
-      value={formData.email}
-      onChange={handleChange}
-    />
-    <input
-      type="password"
-      name="password"
-      placeholder="Password"
-      value={formData.password}
-      onChange={handleChange}
-    />
-    <button type="submit">Login</button>
-  </form>
-  {error && <p style={{ color: 'red' }}>{error}</p>}
-  <p>
-    Don't have an account? <Link to="/register">Register here</Link>
-  </p>
-</div>
+ <body className='page-styling'>
+       <div className="container">
+      <h1>Login Page</h1>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      <form onSubmit={handleLogin}>
+        <input
+          type="text"
+          name="email"
+          placeholder="Email"
+          value={formData.email}
+          onChange={handleChange}
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={formData.password}
+          onChange={handleChange}
+        />
+        <button type="submit">Login</button>
+      </form>
+      
+      <p>
+        Don't have an account? <Link to="/register">Register here</Link>
+      </p>
+    </div>
+ </body>
   );
 };
 

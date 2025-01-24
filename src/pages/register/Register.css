@@ -1,5 +1,8 @@
-/* General styling for the entire page */
-body {
+body{
+  background: linear-gradient(135deg, #fbc2eb, #a6c1ee);
+}
+
+.page-styling {
     font-family: Arial, sans-serif;
     background: linear-gradient(135deg, #fbc2eb, #a6c1ee);
     color: #333;

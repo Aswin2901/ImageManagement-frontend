@@ -1,4 +1,8 @@
-body {
+body{
+  background: linear-gradient(135deg, #8bf3f7, #a56ee7);
+}
+
+.page-styling{
     font-family: Arial, sans-serif;
     background: linear-gradient(135deg, #8bf3f7, #a56ee7);
     color: #333;
@@ -13,7 +17,6 @@ body {
   /* Container styling */
   .container {
     background-color: #fff;
-    padding: 30px;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     text-align: center;
