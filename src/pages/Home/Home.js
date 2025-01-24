@@ -87,6 +87,8 @@ const Home = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [isUploadPopupOpen, setIsUploadPopupOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
 
   useEffect(() => {
     fetchImages();
@@ -94,10 +96,13 @@ const Home = () => {
 
   const fetchImages = async () => {
     try {
+      setLoading(true); // Start loading
       const response = await api.get(`accounts/image_get/${user_id}/`);
       setImages(response.data.map((image) => ({ ...image, imagePreview: null })));
     } catch (error) {
       console.error("Error fetching images:", error.response || error.message);
+    }finally {
+      setLoading(false); // End loading
     }
   };
 
@@ -111,6 +116,7 @@ const Home = () => {
   };
 
   const handleUpdate = async (index, updatedTitle, updatedImage) => {
+    setLoading(true); // Start loading
     const updatedImages = [...images];
     updatedImages[index].title = updatedTitle;
   
@@ -131,6 +137,8 @@ const Home = () => {
     } catch (error) {
       console.error("Error updating image:", error.response?.data || error.message);
       alert("Failed to update image. Please try again.");
+    } finally {
+      setLoading(false); // End loading
     }
   };
   
@@ -140,6 +148,8 @@ const Home = () => {
     if (!confirmDelete) {
       return; // If the user cancels, exit the function
     }
+
+    setLoading(true); // Start loading
   
     const imageId = images[index].id;
   
@@ -157,6 +167,8 @@ const Home = () => {
       console.error("Error deleting image:", error.response?.data || error.message);
       setErrorMessage("Failed to delete image. Please try again."); // Display error message
       fetchImages(); // Refresh the image list in case of failure
+    } finally {
+      setLoading(false); // End loading
     }
   };
 
@@ -188,6 +200,7 @@ const Home = () => {
   };
 
   const handleUpload = async () => {
+    setLoading(true); // Start loading
     const formData = new FormData();
     files.forEach((file) => {
       formData.append("files", file.file);
@@ -203,6 +216,8 @@ const Home = () => {
       setIsUploadPopupOpen(false)
     } catch (error) {
       console.error("Upload failed:", error.response?.data || error.message);
+    } finally {
+      setLoading(false); // End loading
     }
   };
 
@@ -225,24 +240,32 @@ const Home = () => {
 
   return (
       <div>
-        <div className="full-head">
-          <div className="header-container">
-            {/* Upload Button with Icon */}
-            <button
-              className="toggle-upload-button"
-              onClick={() => setIsUploadPopupOpen(true)}
-            >
-              <FontAwesomeIcon icon={faUpload} />
-            </button>
-
-            <h1 className="heading">Image Management</h1>
-
-            {/* Profile Button */}
-            <button className="profile-button">
-              <FontAwesomeIcon icon={faUser} />
-            </button>
+        {loading && (
+          <div className="loading-overlay">
+            <p>Loading...</p>
           </div>
-        </div>
+        )}
+
+        {!loading && (
+          <div className="full-head">
+            <div className="header-container">
+              {/* Upload Button with Icon */}
+              <button
+                className="toggle-upload-button"
+                onClick={() => setIsUploadPopupOpen(true)}
+              >
+                <FontAwesomeIcon icon={faUpload} />
+              </button>
+
+              <h1 className="heading">Image Management</h1>
+
+              {/* Profile Button */}
+              <button className="profile-button">
+                <FontAwesomeIcon icon={faUser} />
+              </button>
+            </div>
+          </div>
+            )}
 
         {/* Upload Section */}
         {isUploadPopupOpen && (
