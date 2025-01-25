@@ -43,7 +43,7 @@ const DraggableImage = ({ image, index, moveImage, handleUpdate, handleDelete })
   {!isEditing ? (
     <>
       <img
-        src={`http://127.0.0.1:8000${image.image}`}
+        src={`https://imagemanagement-tymu.onrender.com${image.image}`}
         alt={image.title}
       />
       <p>{image.title}</p>
@@ -59,7 +59,7 @@ const DraggableImage = ({ image, index, moveImage, handleUpdate, handleDelete })
           src={
             editedImage
               ? URL.createObjectURL(editedImage)
-              : `http://127.0.0.1:8000${image.image}`
+              : `https://imagemanagement-tymu.onrender.com${image.image}`
           }
           alt="Preview"
         />
