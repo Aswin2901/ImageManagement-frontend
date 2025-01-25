@@ -43,7 +43,7 @@ const DraggableImage = ({ image, index, moveImage, handleUpdate, handleDelete })
   {!isEditing ? (
     <>
       <img
-        src={`https://imagemanagement-zy2e.onrender.com/${image.image}`}
+        src={`https://imagemanagement-zy2e.onrender.com${image.image}`}
         alt={image.title}
       />
       <p>{image.title}</p>
@@ -59,7 +59,7 @@ const DraggableImage = ({ image, index, moveImage, handleUpdate, handleDelete })
           src={
             editedImage
               ? URL.createObjectURL(editedImage)
-              : `https://imagemanagement-zy2e.onrender.com/${image.image}`
+              : `https://imagemanagement-zy2e.onrender.com${image.image}`
           }
           alt="Preview"
         />
