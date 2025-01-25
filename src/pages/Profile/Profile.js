@@ -53,6 +53,8 @@ const Profile = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('user_id');
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
     window.location.href = '/login'; // Redirect to login page
   };
 
