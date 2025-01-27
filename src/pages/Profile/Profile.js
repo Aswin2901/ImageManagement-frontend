@@ -51,14 +51,13 @@ const Profile = () => {
   };
 
   const handleLogout = () => {
-    const confirmDelete = window.confirm("Are you sure you want to Logout?");
-    if (!confirmDelete) {
-      return; // If the user cancels, exit the function
+    const confirmLogout = window.confirm('Are you sure you want to log out?');
+    if (confirmLogout) {
+      localStorage.removeItem('user_id');
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
+      window.location.href = '/login'; // Redirect to login page
     }
-    localStorage.removeItem('user_id');
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    window.location.href = '/login'; // Redirect to login page
   };
 
   return (
