@@ -34,24 +34,27 @@ const Profile = () => {
       setErrorMessage("Passwords do not match.");
       return;
     }
-    setLoading(true);
     try {
       const response = await api.post(`accounts/change_password/${user_id}/`, {
         old_password: oldPassword,
         new_password: newPassword,
       });
       setSuccessMessage("Password updated successfully.");
+      setErrorMessage('')
       setOldPassword('');
       setNewPassword('');
       setConfirmPassword('');
     } catch (error) {
-      setErrorMessage(error.response?.data || 'Failed to update password. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+      console.log(error)
+      setErrorMessage(error.response?.data.error || 'Failed to update password. Please try again.');
+    } 
   };
 
   const handleLogout = () => {
+    const confirmDelete = window.confirm("Are you sure you want to Logout?");
+    if (!confirmDelete) {
+      return; // If the user cancels, exit the function
+    }
     localStorage.removeItem('user_id');
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
@@ -83,6 +86,8 @@ const Profile = () => {
 
       <div className="content">
         {loading && <div className="loading-overlay">Loading...</div>}
+        {errorMessage && <div className="error-message">{errorMessage}</div>}
+            {successMessage && <div className="success-message">{successMessage}</div>}
 
         {activeTab === 'profile' && userDetails && (
           <div className="profile-content">
@@ -127,8 +132,7 @@ const Profile = () => {
               </div>
               <button type="submit" className="submit-btn">Change Password</button>
             </form>
-            {errorMessage && <div className="error-message">{errorMessage}</div>}
-            {successMessage && <div className="success-message">{successMessage}</div>}
+            
           </div>
         )}
       </div>
