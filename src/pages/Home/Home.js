@@ -99,11 +99,11 @@ const Home = () => {
   const fetchImages = async () => {
     try {
       setLoading(true); // Start loading
-      const response = await api.get(`accounts/image_get/${user_id}/`);
+      const response = await api.get("accounts/image_get/"); // No need to pass user_id
       setImages(response.data.map((image) => ({ ...image, imagePreview: null })));
     } catch (error) {
       console.error("Error fetching images:", error.response || error.message);
-    }finally {
+    } finally {
       setLoading(false); // End loading
     }
   };
@@ -205,18 +205,21 @@ const Home = () => {
   const handleUpload = async () => {
     setLoading(true); // Start loading
     const formData = new FormData();
+    
     files.forEach((file) => {
       formData.append("files", file.file);
       formData.append("titles", file.title || "Untitled");
     });
-
+  
     try {
-      await api.post(`accounts/image_post/${user_id}/`, formData, {
+      // No need to manually pass `user_id`, backend should get it from token
+      await api.post("accounts/image_post/", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      fetchImages();
-      setFiles([]);
-      setIsUploadPopupOpen(false)
+  
+      fetchImages();  // Refresh images after upload
+      setFiles([]);   // Clear selected files
+      setIsUploadPopupOpen(false);
     } catch (error) {
       console.error("Upload failed:", error.response?.data || error.message);
     } finally {

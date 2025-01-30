@@ -6,7 +6,9 @@ const PrivateRoute = ({ children }) => {
   const { auth } = useAuth(); // Use the auth object from AuthContext
 
   // Check if the user is authenticated
-  const isAuthenticated = !!auth.accessToken;
+  const isAuthenticated = auth.is_authenticated;
+
+  console.log('is authenticated from private route' , isAuthenticated)
 
   return isAuthenticated ? children : <Navigate to="/login" />; // Redirect to /login if not authenticated
 };
