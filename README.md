@@ -1,70 +1,115 @@
-# Getting Started with Create React App
+Image Management Project
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is a web-based image management system that allows users to:
 
-## Available Scripts
+Upload Images: Add images to the gallery and provide a custom title for each image.
 
-In the project directory, you can run:
+Drag and Drop Reordering: Change the order of images in the gallery using drag-and-drop functionality.
 
-### `npm start`
+Edit: Modify the title or other details of an image.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Delete: Remove unwanted images from the gallery.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Multi-Selection Option: Select multiple images at once for batch actions (e.g., delete or reorder).
 
-### `npm test`
+The project is hosted live at: https://www.picturepeach.xyz/
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Features
 
-### `npm run build`
+Image Uploading: Supports uploading images with customizable titles.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Reordering: Intuitive drag-and-drop interface for rearranging the image order.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Editing: Edit titles or other image details with a simple UI.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Deleting: Remove images easily with a delete button.
 
-### `npm run eject`
+Batch Actions: Select multiple images at once for batch operations.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+![image](https://github.com/user-attachments/assets/cbb76df7-63f3-4fa7-891e-fe57cd997e04)
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Homepage
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Multi-Selection Option
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+(Add your screenshots in the above placeholders by uploading them to the repository and linking their paths.)
 
-### Analyzing the Bundle Size
+Installation
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Clone the repository:
 
-### Making a Progressive Web App
+git clone [https://github.com/your-username/image-management.git](https://github.com/Aswin2901/ImageManagement-frontend/)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Navigate to the project directory:
 
-### Advanced Configuration
+cd image-management
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Install dependencies:
+If you're using a backend like Django and a frontend like React, follow these steps:
 
-### Deployment
+Backend (Django):
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py runserver
 
-### `npm run build` fails to minify
+Frontend (React):
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+cd frontend
+npm install
+npm start
+
+Start the application:
+
+Open the backend server (Django) and the frontend (React).
+
+Access the application in your browser at http://localhost:3000/ (or your configured port).
+
+Usage
+
+Uploading Images: Click the upload button, select an image, and provide a title.
+
+Reordering Images: Drag and drop images to rearrange their order.
+
+Editing Images: Use the "Edit" button to update image titles or details.
+
+Deleting Images: Click the "Delete" button to remove images.
+
+Multi-Selection: Use the multi-select option to select multiple images and perform batch actions.
+
+Technologies Used
+
+Frontend: React.js, HTML, CSS
+
+Backend: Django, Python
+
+Hosting Platform: PythonAnywhere
+
+Live Demo
+
+Visit the live demo: https://www.picturepeach.xyz/
+
+Contribution
+
+Contributions are welcome! Please follow these steps:
+
+Fork the repository.
+
+Create a new branch (git checkout -b feature-branch-name).
+
+Commit your changes (git commit -m 'Add a new feature').
+
+Push to the branch (git push origin feature-branch-name).
+
+Open a pull request.
+
+
+
+Contact
+
+For any questions or feedback, reach out at aswinvazhathodiyil113@gmail.com
