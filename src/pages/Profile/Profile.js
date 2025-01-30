@@ -21,7 +21,7 @@ const Profile = () => {
 
   const fetchUserDetails = async () => {
     try {
-      const response = await api.get(`accounts/user_details/${user_id}/`);
+      const response = await api.get(`accounts/user_details/`);
       setUserDetails(response.data);
     } catch (error) {
       console.error("Error fetching user details:", error.response || error.message);
@@ -35,7 +35,7 @@ const Profile = () => {
       return;
     }
     try {
-      const response = await api.post(`accounts/change_password/${user_id}/`, {
+      const response = await api.post(`accounts/change_password/`, {
         old_password: oldPassword,
         new_password: newPassword,
       });
@@ -53,7 +53,7 @@ const Profile = () => {
   const handleLogout = () => {
     const confirmLogout = window.confirm('Are you sure you want to log out?');
     if (confirmLogout) {
-      localStorage.removeItem('user_id');
+      localStorage.removeItem('user');
       localStorage.removeItem('access_token');
       localStorage.removeItem('refresh_token');
       window.location.href = '/login'; // Redirect to login page
