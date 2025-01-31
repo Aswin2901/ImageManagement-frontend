@@ -175,6 +175,7 @@ const Home = () => {
   };
 
   const moveImage = (fromIndex, toIndex) => {
+    console.log('move .....')
     const updatedImages = [...images];
     const [movedImage] = updatedImages.splice(fromIndex, 1);
     updatedImages.splice(toIndex, 0, movedImage);
@@ -190,12 +191,10 @@ const Home = () => {
     // Send updated order to the backend
     api
       .post("accounts/update_order/", {
-        user_id: user_id, // Pass the user ID
         images: orderData,
       })
       .then(() => {
         console.log("Order updated successfully");
-        fetchImages()
       })
       .catch((error) => {
         console.error("Failed to update order:", error.response?.data || error.message);
@@ -227,17 +226,6 @@ const Home = () => {
     }
   };
 
-  const saveOrder = async () => {
-    try {
-      await api.post(`accounts/save_order/${user_id}/`, {
-        images: images.map((image, index) => ({ id: image.id, order: index })),
-      });
-      alert("Order saved!");
-      setIsOrderChanged(false);
-    } catch (error) {
-      console.error("Failed to save order:", error.response?.data || error.message);
-    }
-  };
 
   const removeImage = (index) => {
     const updatedFiles = files.filter((_, i) => i !== index);
