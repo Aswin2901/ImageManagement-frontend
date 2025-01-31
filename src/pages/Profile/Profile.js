@@ -2,14 +2,12 @@ import React, { useState, useEffect } from 'react';
 import api from '../../components/services/api';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import './Profile.css';
 
 const Profile = () => {
-  const user_id = JSON.parse(localStorage.getItem('user_id'));
   const [userDetails, setUserDetails] = useState(null);
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [oldPassword, setOldPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [loading, setLoading] = useState(false);
@@ -28,27 +26,45 @@ const Profile = () => {
     }
   };
 
-  const handlePasswordChange = async (e) => {
-    e.preventDefault();
-    if (newPassword !== confirmPassword) {
-      setErrorMessage("Passwords do not match.");
-      return;
-    }
-    try {
-      const response = await api.post(`accounts/change_password/`, {
-        old_password: oldPassword,
-        new_password: newPassword,
-      });
-      setSuccessMessage("Password updated successfully.");
-      setErrorMessage('')
-      setOldPassword('');
-      setNewPassword('');
-      setConfirmPassword('');
-    } catch (error) {
-      console.log(error)
-      setErrorMessage(error.response?.data.error || 'Failed to update password. Please try again.');
-    } 
-  };
+  // Yup validation schema
+  const validationSchema = Yup.object({
+    old_password: Yup.string().required('Old Password is required'),
+    new_password: Yup.string()
+      .min(8, 'Password must be at least 8 characters')
+      .matches(/[A-Z]/, 'Password must contain at least one uppercase letter')
+      .matches(/[a-z]/, 'Password must contain at least one lowercase letter')
+      .matches(/[0-9]/, 'Password must contain at least one number')
+      .matches(/[!@#$%^&*]/, 'Password must contain at least one special character')
+      .required('New Password is required'),
+    confirm_password: Yup.string()
+      .oneOf([Yup.ref('new_password')], 'Passwords do not match')
+      .required('Confirm Password is required'),
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      old_password: '',
+      new_password: '',
+      confirm_password: '',
+    },
+    validationSchema,
+    onSubmit: async (values, { resetForm }) => {
+      try {
+        setLoading(true);
+        const response = await api.post(`accounts/change_password/`, {
+          old_password: values.old_password,
+          new_password: values.new_password,
+        });
+        setSuccessMessage("Password updated successfully.");
+        setErrorMessage('');
+        resetForm();
+      } catch (error) {
+        setErrorMessage(error.response?.data.error || 'Failed to update password. Please try again.');
+      } finally {
+        setLoading(false);
+      }
+    },
+  });
 
   const handleLogout = () => {
     const confirmLogout = window.confirm('Are you sure you want to log out?');
@@ -75,10 +91,7 @@ const Profile = () => {
         >
           Change Password
         </button>
-        <button
-          className={activeTab === 'logout' ? 'active' : ''}
-          onClick={handleLogout}
-        >
+        <button className="logout-btn" onClick={handleLogout}>
           <FontAwesomeIcon icon={faSignOutAlt} /> Logout
         </button>
       </div>
@@ -86,7 +99,7 @@ const Profile = () => {
       <div className="content">
         {loading && <div className="loading-overlay">Loading...</div>}
         {errorMessage && <div className="error-message">{errorMessage}</div>}
-            {successMessage && <div className="success-message">{successMessage}</div>}
+        {successMessage && <div className="success-message">{successMessage}</div>}
 
         {activeTab === 'profile' && userDetails && (
           <div className="profile-content">
@@ -101,37 +114,51 @@ const Profile = () => {
         {activeTab === 'changePassword' && (
           <div className="change-password-content">
             <h3>Change Password</h3>
-            <form onSubmit={handlePasswordChange} className="password-form">
+            <form onSubmit={formik.handleSubmit} className="password-form">
               <div>
                 <label>Old Password</label>
                 <input
                   type="password"
-                  value={oldPassword}
-                  onChange={(e) => setOldPassword(e.target.value)}
+                  name="old_password"
+                  value={formik.values.old_password}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                   required
                 />
+                {formik.touched.old_password && formik.errors.old_password && (
+                  <div className="error-text">{formik.errors.old_password}</div>
+                )}
               </div>
               <div>
                 <label>New Password</label>
                 <input
                   type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
+                  name="new_password"
+                  value={formik.values.new_password}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                   required
                 />
+                {formik.touched.new_password && formik.errors.new_password && (
+                  <div className="error-text">{formik.errors.new_password}</div>
+                )}
               </div>
               <div>
                 <label>Confirm New Password</label>
                 <input
                   type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  name="confirm_password"
+                  value={formik.values.confirm_password}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                   required
                 />
+                {formik.touched.confirm_password && formik.errors.confirm_password && (
+                  <div className="error-text">{formik.errors.confirm_password}</div>
+                )}
               </div>
               <button type="submit" className="submit-btn">Change Password</button>
             </form>
-            
           </div>
         )}
       </div>
