@@ -202,6 +202,7 @@ const Home = () => {
   };
 
   const handleUpload = async () => {
+    setIsUploadPopupOpen(false);
     setLoading(true); // Start loading
     const formData = new FormData();
     
@@ -215,10 +216,11 @@ const Home = () => {
       await api.post("accounts/image_post/", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
+      
   
       fetchImages();  // Refresh images after upload
       setFiles([]);   // Clear selected files
-      setIsUploadPopupOpen(false);
+      
     } catch (error) {
       console.error("Upload failed:", error.response?.data || error.message);
     } finally {
@@ -250,6 +252,8 @@ const Home = () => {
               >
                 <FontAwesomeIcon icon={faUpload} />
               </button>
+
+              
 
               <h1 className="heading">Image Management</h1>
 
